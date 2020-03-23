@@ -4,16 +4,20 @@ import seaborn as sns
 import scipy as sc
 import matplotlib.pyplot as plt
 
+plt.close("all")
+
 #print descriptive stats and plot histogram 
 def show_dist(df, col):
     print('Descriptive stats for {}'.format(col),'≥ 10')
     print('-'*(len(col)+22))
     print(df[col].describe())
     bins = np.arange(df[col].min(), df[col].max() + 1,(df[col].max() + 1-df[col].min())/60)
-    sns.distplot(df[col],kde=False,bins=bins,color='navy')
-    plt.title('Confirmed COVID19 cases ≥ 10 in Iran provinces', fontsize=16)
-    plt.xlabel('Cases', fontsize=14)
-    plt.ylabel('Frequency', fontsize=14)
+    sns.distplot(df[col],kde=False,bins=bins,color='royalblue',hist_kws=dict(alpha=1))
+    sns.set_style("whitegrid",{'grid.linestyle': 'dashed'})
+    sns.set_context("paper")
+    plt.title('Confirmed COVID19 cases ≥ 10 in Iran provinces', fontsize=14)
+    plt.xlabel('Cases', fontsize=12)
+    plt.ylabel('Frequency', fontsize=12)
     plt.xticks(np.arange(0, 350, 50))
     plt.savefig('Iran_Ostani_Hist.png', dpi=300,bbox_inches='tight',pad_inches=0.1)
     
@@ -74,6 +78,11 @@ df_digit_counts = pd.DataFrame(list(zip(str(digits),Benford_expected_digit_count
 ax = df_digit_counts.plot(kind='bar',rot=0)
 ax.set_xticklabels(digits)
 ax.set_xlabel('First Digit')
+ax.set_title('First digit distributions of the COVID19 reported sample (n=373)')
+ax.set_axisbelow(True)
+ax.grid(color='lightgray',linestyle='dashed')
+handles, labels = ax.get_legend_handles_labels()
+ax.legend(handles, ['Expected (Benford\'s law)','Observed (Iran report)'])
 ax.set_ylabel('Frequency')
 ax.figure.savefig('Iran_Ostani_FirstDigit.png', dpi=300,bbox_inches='tight',pad_inches=0.1)
 
